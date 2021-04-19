@@ -3,7 +3,7 @@ var Lazy = require('lazy');
 //onst readline = require('readline');
 
 var source = "freemode.ysc.c";//Your decompiled ysc.c
-var target = __dirname + "remoteids.txt";
+var target = "remoteids.txt";
 
 var lineReader = require('readline').createInterface({
     input: require('fs').createReadStream(source)
@@ -13,7 +13,7 @@ var TheRemoteIDHashes = [];
 var linecounter = 0;
 var foundids = 0;
 var begin = 0;//Line to start search
-var end = 1125127;//Line to end search
+var end = 0;//Line to end search
 
 function findid(currentline, ammountoftabs) {
     spaces = ammountoftabs * 4;
@@ -87,9 +87,13 @@ lineReader.on('line', function (line) {
 
 forcpp = () => {
     var theoutput = 'int remotes[] = {';
-    for (var x = 0; x < foundids; x++) {
-        theoutput = theoutput + TheRemoteIDHashes[x].toString()
-        theoutput += ', '
+    for (var x = 0; x < TheRemoteIDHashes.length; x++) {
+        if (x == TheRemoteIDHashes.length - 1) {
+            theoutput = theoutput + TheRemoteIDHashes[x].toString()
+        } else {
+            theoutput = theoutput + TheRemoteIDHashes[x].toString()
+            theoutput += ', '
+        }
     }
     theoutput += '};'
     return theoutput
@@ -106,7 +110,10 @@ lineReader.on("close", function () {
     }
 
     var forfile = forcpp();
-    filePath = __dirname + '/out.txt';
-    fs.appendFile(filePath, forcpp(), function () {
-    });
+    fs.writeFile(target, forfile, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        console.log("The file was saved!");
+    }); 
 })
