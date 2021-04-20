@@ -56,7 +56,7 @@ lineReader.on('line', function (line) {
             ShortetLine = ShortetLine.replace(":", "");
         }
 
-        if (ShortetLine.length > 5) {
+        if (ShortetLine.length > 5 && ShortetLine.length < 15) {
             if (isNumeric(ShortetLine)) {
                 TheRemoteIDHashes.push(ShortetLine);
                 foundids++;
