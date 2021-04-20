@@ -1,3 +1,4 @@
+//Script decompiler: https://github.com/njames93/GTA-V-Script-Decompiler
 var fs = require('fs')
 var Lazy = require('lazy');
 //onst readline = require('readline');
