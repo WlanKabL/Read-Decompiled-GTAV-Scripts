@@ -1,20 +1,21 @@
-//Script decompiler: https://github.com/njames93/GTA-V-Script-Decompiler
+//Script decompiler: https://github.com/njames93/GTA-V-Script-Decompiler;
+//1.54 Scripts: https://github.com/Sainan/GTA-V-Decompiled-Scripts/tree/master/scripts;
 var fs = require('fs');
 var Lazy = require('lazy');
-//onst readline = require('readline');
 
 var source = "freemode.c";//Your decompiled ysc.c
-var target = "remoteids.txt";
+var target = "remoteids.txt";//Outputfile
 
 var lineReader = require('readline').createInterface({
-    input: require('fs').createReadStream(source)
+    input: require('fs').createReadStream(source)//Program start reading 'source'
 });
 
-var TheRemoteIDHashes = [];
-var linecounter = 0;
-var foundids = 0;
+var TheRemoteIDHashes = [];//Array of all found RemoteID's
+var linecounter = 0;//Lines searched between: 'begin'-'end'
+var foundids = 0;//Ammount of found RemoteID's
 var begin = 0;//Line to start search
 var end = 1125129;//Line to end search
+var foundsearch = false;//Checks if there is even 1 RemoteID found
 
 function isNumeric(str) {
     if (typeof str != "string") return false // we only process strings!  
@@ -22,7 +23,6 @@ function isNumeric(str) {
         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
-var foundsearch = false;
 lineReader.on('line', function (line) {
     if (linecounter >= begin && linecounter <= end) {
         var ShortetLine = "";
@@ -68,6 +68,7 @@ lineReader.on('line', function (line) {
     linecounter++;
 });
 
+//Output a array to copy in C++->Bruteforce all possible RemoteID's via. trigger_script_event
 forcpp = () => {
     var theoutput = 'int remotes[' + foundids + '] = {';
     for (var x = 0; x < TheRemoteIDHashes.length; x++) {
@@ -82,6 +83,7 @@ forcpp = () => {
     return theoutput;
 }
 
+//End of Programm. All lines of 'source' got readed
 lineReader.on("close", function () {
     console.log("File searched: " + source)
     if (foundsearch) {
@@ -92,8 +94,7 @@ lineReader.on("close", function () {
         console.log("ERROR: Searchrequest not found!")
     }
 
-    var forfile = forcpp();
-    fs.writeFile(target, forfile, function (err) {
+    fs.writeFile(target, forcpp(), function (err) {
         if (err) {
             return console.log(err);
         }
