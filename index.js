@@ -24,7 +24,6 @@ function isNumeric(str) {
 
 var foundsearch = false;
 lineReader.on('line', function (line) {
-
     if (linecounter >= begin && linecounter <= end) {
         var ShortetLine = "";
         if (line.startsWith("case")) {
