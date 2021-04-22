@@ -2,8 +2,9 @@
 //1.54 Scripts: https://github.com/Sainan/GTA-V-Decompiled-Scripts/tree/master/scripts;
 var fs = require('fs');
 var Lazy = require('lazy');
+const { exit } = require('process');
 
-var source = "freemode.c";//Your decompiled ysc.c
+var source = __dirname + "/shop_controller.c";//Your decompiled ysc.c
 var target = "remoteids.txt";//Outputfile
 
 var lineReader = require('readline').createInterface({
@@ -14,7 +15,7 @@ var TheRemoteIDHashes = [];//Array of all found RemoteID's
 var linecounter = 0;//Lines searched between: 'begin'-'end'
 var foundids = 0;//Ammount of found RemoteID's
 var begin = 0;//Line to start search
-var end = 1125129;//Line to end search
+var end = 168390;//Line to end search
 var foundsearch = false;//Checks if there is even 1 RemoteID found
 
 function isNumeric(str) {
@@ -50,8 +51,20 @@ lineReader.on('line', function (line) {
         } else if (line.startsWith("\t\t\t\t\t\t\tcase ")) {
             ShortetLine = line.replace("\t\t\t\t\t\t\tcase ", "");
             ShortetLine = ShortetLine.replace(":", "");
-        } else if (line.startsWith("\t\t\t\t\t\t\tcase ")) {
+        } else if (line.startsWith("\t\t\t\t\t\t\t\tcase ")) {
             ShortetLine = line.replace("\t\t\t\t\t\t\t\tcase ", "");
+            ShortetLine = ShortetLine.replace(":", "");
+        } else if (line.startsWith("\t\t\t\t\t\t\t\t\tcase ")) {
+            ShortetLine = line.replace("\t\t\t\t\t\t\t\t\tcase ", "");
+            ShortetLine = ShortetLine.replace(":", "");
+        } else if (line.startsWith("\t\t\t\t\t\t\t\t\t\tcase ")) {
+            ShortetLine = line.replace("\t\t\t\t\t\t\t\t\t\tcase ", "");
+            ShortetLine = ShortetLine.replace(":", "");
+        } else if (line.startsWith("\t\t\t\t\t\t\t\t\t\t\tcase ")) {
+            ShortetLine = line.replace("\t\t\t\t\t\t\t\t\t\t\tcase ", "");
+            ShortetLine = ShortetLine.replace(":", "");
+        } else if (line.startsWith("\t\t\t\t\t\t\t\t\t\t\t\tcase ")) {
+            ShortetLine = line.replace("\t\t\t\t\t\t\t\t\t\t\t\tcase ", "");
             ShortetLine = ShortetLine.replace(":", "");
         }
 
@@ -85,13 +98,14 @@ forcpp = () => {
 
 //End of Programm. All lines of 'source' got readed
 lineReader.on("close", function () {
-    console.log("File searched: " + source)
+    console.log("File searched: " + source);
     if (foundsearch) {
-        console.log("Searched Lines: " + linecounter)
-        console.log("Searched between: " + begin + " and " + end)
-        console.log("Found RemoteHashID's: " + foundids)
+        console.log("Searched Lines: " + linecounter);
+        console.log("Searched between: " + begin + " and " + end);
+        console.log("Found RemoteHashID's: " + foundids);
     } else {
-        console.log("ERROR: Searchrequest not found!")
+        console.log("ERROR: Searchrequest not found!");
+        exit(0);
     }
 
     fs.writeFile(target, forcpp(), function (err) {
